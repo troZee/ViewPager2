@@ -68,7 +68,7 @@ import java.lang.annotation.Retention;
  *
  * @see androidx.viewpager.widget.ViewPager
  */
-public final class ViewPager2 extends ViewGroup {
+public class ViewPager2 extends ViewGroup {
     /** @hide */
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     @Retention(SOURCE)
@@ -123,15 +123,15 @@ public final class ViewPager2 extends ViewGroup {
     static boolean sFeatureEnhancedA11yEnabled = true;
 
     // reused in layout(...)
-    private final Rect mTmpContainerRect = new Rect();
-    private final Rect mTmpChildRect = new Rect();
+    public final Rect mTmpContainerRect = new Rect();
+    public final Rect mTmpChildRect = new Rect();
 
-    private CompositeOnPageChangeCallback mExternalPageChangeCallbacks =
+    public CompositeOnPageChangeCallback mExternalPageChangeCallbacks =
             new CompositeOnPageChangeCallback(3);
 
-    int mCurrentItem;
-    boolean mCurrentItemDirty = false;
-    private RecyclerView.AdapterDataObserver mCurrentItemDataSetChangeObserver =
+    public int mCurrentItem;
+    public boolean mCurrentItemDirty = false;
+    public RecyclerView.AdapterDataObserver mCurrentItemDataSetChangeObserver =
             new DataSetChangeObserver() {
                 @Override
                 public void onChanged() {
@@ -140,20 +140,20 @@ public final class ViewPager2 extends ViewGroup {
                 }
             };
 
-    private LinearLayoutManager mLayoutManager;
-    private int mPendingCurrentItem = NO_POSITION;
-    private Parcelable mPendingAdapterState;
-    RecyclerView mRecyclerView;
-    private PagerSnapHelper mPagerSnapHelper;
-    ScrollEventAdapter mScrollEventAdapter;
-    private CompositeOnPageChangeCallback mPageChangeEventDispatcher;
-    private FakeDrag mFakeDragger;
-    private PageTransformerAdapter mPageTransformerAdapter;
-    private RecyclerView.ItemAnimator mSavedItemAnimator = null;
-    private boolean mSavedItemAnimatorPresent = false;
-    private boolean mUserInputEnabled = true;
-    private @OffscreenPageLimit int mOffscreenPageLimit = OFFSCREEN_PAGE_LIMIT_DEFAULT;
-    AccessibilityProvider mAccessibilityProvider; // to avoid creation of a synthetic accessor
+    public LinearLayoutManager mLayoutManager;
+    public int mPendingCurrentItem = NO_POSITION;
+    public Parcelable mPendingAdapterState;
+    public RecyclerView mRecyclerView;
+    public PagerSnapHelper mPagerSnapHelper;
+    public ScrollEventAdapter mScrollEventAdapter;
+    public CompositeOnPageChangeCallback mPageChangeEventDispatcher;
+    public FakeDrag mFakeDragger;
+    public PageTransformerAdapter mPageTransformerAdapter;
+    public RecyclerView.ItemAnimator mSavedItemAnimator = null;
+    public boolean mSavedItemAnimatorPresent = false;
+    public boolean mUserInputEnabled = true;
+    public @OffscreenPageLimit int mOffscreenPageLimit = OFFSCREEN_PAGE_LIMIT_DEFAULT;
+    public AccessibilityProvider mAccessibilityProvider; // to avoid creation of a synthetic accessor
 
     public ViewPager2(@NonNull Context context) {
         super(context);
@@ -177,7 +177,7 @@ public final class ViewPager2 extends ViewGroup {
         initialize(context, attrs);
     }
 
-    private void initialize(Context context, AttributeSet attrs) {
+    public void initialize(Context context, AttributeSet attrs) {
         mAccessibilityProvider = sFeatureEnhancedA11yEnabled
                 ? new PageAwareAccessibilityProvider()
                 : new BasicAccessibilityProvider();
@@ -261,7 +261,7 @@ public final class ViewPager2 extends ViewGroup {
      *
      * TODO(b/70666617) Allow page width different than width/height 100%/100%
      */
-    private RecyclerView.OnChildAttachStateChangeListener enforceChildFillListener() {
+    public RecyclerView.OnChildAttachStateChangeListener enforceChildFillListener() {
         return new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(@NonNull View view) {
@@ -290,7 +290,7 @@ public final class ViewPager2 extends ViewGroup {
         return super.getAccessibilityClassName();
     }
 
-    private void setOrientation(Context context, AttributeSet attrs) {
+    public void setOrientation(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewPager2);
         if (Build.VERSION.SDK_INT >= 29) {
             saveAttributeDataForStyleable(context, R.styleable.ViewPager2, attrs, a, 0, 0);
@@ -338,7 +338,7 @@ public final class ViewPager2 extends ViewGroup {
         mPendingAdapterState = ss.mAdapterState;
     }
 
-    private void restorePendingState() {
+    public void restorePendingState() {
         if (mPendingCurrentItem == NO_POSITION) {
             // No state to restore, or state is already restored
             return;
@@ -397,7 +397,7 @@ public final class ViewPager2 extends ViewGroup {
             super(superState);
         }
 
-        private void readValues(Parcel source, ClassLoader loader) {
+        public void readValues(Parcel source, ClassLoader loader) {
             mRecyclerViewId = source.readInt();
             mCurrentItem = source.readInt();
             mAdapterState = source.readParcelable(loader);
@@ -467,13 +467,13 @@ public final class ViewPager2 extends ViewGroup {
         registerCurrentItemDataSetTracker(adapter);
     }
 
-    private void registerCurrentItemDataSetTracker(@Nullable Adapter<?> adapter) {
+    public void registerCurrentItemDataSetTracker(@Nullable Adapter<?> adapter) {
         if (adapter != null) {
             adapter.registerAdapterDataObserver(mCurrentItemDataSetChangeObserver);
         }
     }
 
-    private void unregisterCurrentItemDataSetTracker(@Nullable Adapter<?> adapter) {
+    public void unregisterCurrentItemDataSetTracker(@Nullable Adapter<?> adapter) {
         if (adapter != null) {
             adapter.unregisterAdapterDataObserver(mCurrentItemDataSetChangeObserver);
         }
@@ -965,7 +965,7 @@ public final class ViewPager2 extends ViewGroup {
      * Slightly modified RecyclerView to get ViewPager behavior in accessibility and to
      * enable/disable user scrolling.
      */
-    private class RecyclerViewImpl extends RecyclerView {
+    public class RecyclerViewImpl extends RecyclerView {
         RecyclerViewImpl(@NonNull Context context) {
             super(context);
         }
@@ -1021,7 +1021,7 @@ public final class ViewPager2 extends ViewGroup {
         }
     }
 
-    private class LinearLayoutManagerImpl extends LinearLayoutManager {
+    public class LinearLayoutManagerImpl extends LinearLayoutManager {
         LinearLayoutManagerImpl(Context context) {
             super(context);
         }
@@ -1064,7 +1064,7 @@ public final class ViewPager2 extends ViewGroup {
         }
     }
 
-    private class PagerSnapHelperImpl extends PagerSnapHelper {
+    public class PagerSnapHelperImpl extends PagerSnapHelper {
         PagerSnapHelperImpl() {
         }
 
@@ -1079,9 +1079,9 @@ public final class ViewPager2 extends ViewGroup {
         }
     }
 
-    private static class SmoothScrollToPosition implements Runnable {
-        private final int mPosition;
-        private final RecyclerView mRecyclerView;
+    public static class SmoothScrollToPosition implements Runnable {
+        public final int mPosition;
+        public final RecyclerView mRecyclerView;
 
         SmoothScrollToPosition(int position, RecyclerView recyclerView) {
             mPosition = position;
@@ -1241,7 +1241,7 @@ public final class ViewPager2 extends ViewGroup {
 
     // TODO(b/141956012): Suppressed during upgrade to AGP 3.6.
     @SuppressWarnings("ClassCanBeStatic")
-    private abstract class AccessibilityProvider {
+    public abstract class AccessibilityProvider {
         void onInitialize(@NonNull CompositeOnPageChangeCallback pageChangeEventDispatcher,
                 @NonNull RecyclerView recyclerView) {
         }
@@ -1350,7 +1350,7 @@ public final class ViewPager2 extends ViewGroup {
     }
 
     class PageAwareAccessibilityProvider extends AccessibilityProvider {
-        private final AccessibilityViewCommand mActionPageForward =
+        public final AccessibilityViewCommand mActionPageForward =
                 new AccessibilityViewCommand() {
                     @Override
                     public boolean perform(@NonNull View view,
@@ -1361,7 +1361,7 @@ public final class ViewPager2 extends ViewGroup {
                     }
                 };
 
-        private final AccessibilityViewCommand mActionPageBackward =
+        public final AccessibilityViewCommand mActionPageBackward =
                 new AccessibilityViewCommand() {
                     @Override
                     public boolean perform(@NonNull View view,
@@ -1372,7 +1372,7 @@ public final class ViewPager2 extends ViewGroup {
                     }
                 };
 
-        private RecyclerView.AdapterDataObserver mAdapterDataObserver;
+        public RecyclerView.AdapterDataObserver mAdapterDataObserver;
 
         @Override
         public void onInitialize(@NonNull CompositeOnPageChangeCallback pageChangeEventDispatcher,
@@ -1557,7 +1557,7 @@ public final class ViewPager2 extends ViewGroup {
             }
         }
 
-        private void addCollectionInfo(AccessibilityNodeInfo info) {
+        public void addCollectionInfo(AccessibilityNodeInfo info) {
             int rowCount = 0;
             int colCount = 0;
             if (getAdapter() != null) {
@@ -1575,7 +1575,7 @@ public final class ViewPager2 extends ViewGroup {
             nodeInfoCompat.setCollectionInfo(collectionInfo);
         }
 
-        private void addScrollActions(AccessibilityNodeInfo info) {
+        public void addScrollActions(AccessibilityNodeInfo info) {
             final Adapter<?> adapter = getAdapter();
             if (adapter == null) {
                 return;
@@ -1598,7 +1598,7 @@ public final class ViewPager2 extends ViewGroup {
      * Simplified {@link RecyclerView.AdapterDataObserver} for clients interested in any data-set
      * changes regardless of their nature.
      */
-    private abstract static class DataSetChangeObserver extends RecyclerView.AdapterDataObserver {
+    public abstract static class DataSetChangeObserver extends RecyclerView.AdapterDataObserver {
         @Override
         public abstract void onChanged();
 
